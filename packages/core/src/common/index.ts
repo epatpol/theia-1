@@ -21,4 +21,3 @@ export * from './contribution-provider';
 export * from './path';
 export * from './logger';
 export * from './messaging';
-export * from './json-validator';
