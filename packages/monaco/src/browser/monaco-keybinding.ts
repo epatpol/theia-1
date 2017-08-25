@@ -195,7 +195,7 @@ export class MonacoKeybindingContribution implements KeybindingContribution {
             if (keyCode & KeyMod.Shift) {
                 sequence.modifiers!.push(Modifier.M2);
             }
-            // ALT
+            // ALTcreateKeyCode
             if (keyCode & KeyMod.Alt) {
                 sequence.modifiers!.push(Modifier.M3);
             }

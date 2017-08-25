@@ -8,8 +8,11 @@
 import { JsonRpcServer } from "@theia/core";
 
 export const preferencesPath = '/services/preferences';
+export const keybindingsPath = '/services/keybindings';
 
 export const PreferenceServer = Symbol("PreferenceServer")
+export const KeybindingServer = Symbol("KeybindingServer")
+
 export interface PreferenceServer extends JsonRpcServer<PreferenceClient> {
 }
 

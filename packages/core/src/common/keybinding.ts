@@ -152,7 +152,6 @@ export class KeybindingRegistry {
         }
         return false;
     }
-
 }
 
 export class KeyEventEmitter implements Disposable {

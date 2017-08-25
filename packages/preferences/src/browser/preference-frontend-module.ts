@@ -7,12 +7,16 @@
 
 import { ContainerModule, } from 'inversify';
 import { WebSocketConnectionProvider } from '@theia/core/lib/browser';
-import { PreferenceService, PreferenceServer, preferencesPath } from "../common";
+import { PreferenceService, PreferenceServer, preferencesPath, keybindingsPath, KeybindingServer } from "../common";
 
 export default new ContainerModule(bind => {
     bind(PreferenceService).toSelf().inSingletonScope();
 
     bind(PreferenceServer).toDynamicValue(ctx =>
         ctx.container.get(WebSocketConnectionProvider).createProxy(preferencesPath)
+    ).inSingletonScope();
+
+    bind(KeybindingServer).toDynamicValue(ctx =>
+        ctx.container.get(WebSocketConnectionProvider).createProxy(keybindingsPath)
     ).inSingletonScope();
 });

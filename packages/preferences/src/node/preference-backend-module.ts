@@ -26,6 +26,13 @@ export type WorkspacePreferenceServer = PreferenceServer;
 export const UserPreferenceServer = Symbol('UserPreferenceServer');
 export type UserPreferenceServer = PreferenceServer;
 
+/*
+ * User preference server that watches the home directory of the user
+ */
+export const KeybindingServer = Symbol('KeybindingServer');
+export type KeybindingServer = PreferenceServer;
+
+
 export default new ContainerModule(bind => {
     bind(JsonPreferenceServer).toSelf();
 
@@ -66,4 +73,15 @@ export default new ContainerModule(bind => {
     ).inSingletonScope();
 
     bind(PreferenceService).toSelf();
+
+
+    bind(KeybindingServer).toDynamicValue(ctx => {
+        const homeUri = FileUri.create(os.homedir());
+        const uri = homeUri.withPath(homeUri.path.join('.theia', 'keybindings.json'));
+
+        const child = ctx.container.createChild();
+        child.bind(PreferenceUri).toConstantValue(uri);
+        return child.get(JsonPreferenceServer);
+    });
+
 });
