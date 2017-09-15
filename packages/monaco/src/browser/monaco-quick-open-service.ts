@@ -7,6 +7,8 @@
 
 import { injectable } from 'inversify';
 import { QuickOpenService, QuickOpenModel, QuickOpenOptions, QuickOpenItem, QuickOpenGroupItem, QuickOpenMode } from "@theia/core/lib/browser";
+import { MONACO_TO_MOUSETRAP } from '@theia/core/lib/common';
+
 
 export interface InternalMonacoQuickOpenModel extends monaco.quickOpen.IQuickOpenControllerOpts {
     readonly prefix?: string;
@@ -197,12 +199,18 @@ export class QuickOpenEntry extends monaco.quickOpen.QuickOpenEntry {
         if (!keybinding) {
             return undefined;
         }
+
         const simple = new monaco.keybindings.SimpleKeybinding(
-            keybinding.keyCode.ctrl,
-            keybinding.keyCode.shift,
-            keybinding.keyCode.alt,
-            keybinding.keyCode.meta,
-            keybinding.keyCode.key.keyCode
+            // keybinding.keystroke.ctrl,
+            // keybinding.keystroke.shift,
+            // keybinding.keystroke.alt,
+            // keybinding.keystroke.meta,
+            // keybinding.keystroke.key.keyCode
+            keybinding.keystroke.includes('ctrl'),
+            keybinding.keystroke.includes('shift'),
+            keybinding.keystroke.includes('alt'),
+            keybinding.keystroke.includes('meta'),
+            MONACO_TO_MOUSETRAP[keybinding.keystroke.split('+')[keybinding.keystroke.split('+').length]]
         );
         return new monaco.keybindings.USLayoutResolvedKeybinding(simple, monaco.platform.OS);
     }

@@ -9,7 +9,7 @@ import { injectable, inject } from 'inversify';
 import { isOSX } from '@theia/core/lib/common/os';
 import { isFirefox, isIE, isWebKit } from '@theia/core/lib/browser';
 import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/common/keybinding';
-import { Accelerator, Key, KeyCode, Keystroke, Modifier } from '@theia/core/lib/common/keys';
+import { Accelerator, Key, /* KeyCode, Keystroke, Modifier */ } from '@theia/core/lib/common/keys';
 import { MonacoCommands } from './monaco-command';
 import { MonacoCommandRegistry } from './monaco-command-registry';
 import KeybindingsRegistry = monaco.keybindings.KeybindingsRegistry;
@@ -170,7 +170,7 @@ export class MonacoKeybindingContribution implements KeybindingContribution {
                     const keybinding = raw as monaco.keybindings.SimpleKeybinding;
                     registry.registerKeyBinding({
                         commandId,
-                        keyCode: this.keyCode(keybinding),
+                        keystroke: this.keyCode(keybinding),
                         accelerator: this.accelerator(keybinding)
                     });
                 } else {
@@ -184,31 +184,40 @@ export class MonacoKeybindingContribution implements KeybindingContribution {
         if (selectAllCommand) {
             registry.registerKeyBinding({
                 commandId: selectAllCommand,
-                keyCode: KeyCode.createKeyCode({ first: Key.KEY_A, modifiers: [Modifier.M1] }),
+                // keystroke: KeyCode.createKeyCode({ first: Key.KEY_A, modifiers: [Modifier.M1] }),
+                keystroke: 'ctrl+a',
                 accelerator: ['Accel A']
             });
         }
     }
 
-    protected keyCode(keybinding: monaco.keybindings.SimpleKeybinding): KeyCode {
+    protected keyCode(keybinding: monaco.keybindings.SimpleKeybinding): string {
         const keyCode = keybinding.keyCode;
-        const sequence: Keystroke = {
-            first: Key.getKey(MONACO_KEY_CODE_MAP[keyCode & 255]),
-            modifiers: []
-        };
+        let sequenceString: string = (Key.getKey(MONACO_KEY_CODE_MAP[keyCode & 255])).code;
+        // const sequence: Keystroke = {
+        //     first: Key.getKey(MONACO_KEY_CODE_MAP[keyCode & 255]),
+        //     modifiers: []
+        // };
         if (keybinding.ctrlKey) {
-            sequence.modifiers!.push(Modifier.M1);
+            sequenceString = "ctrl+" + sequenceString;
+            // sequence.modifiers!.push(Modifier.M1);
         }
         if (keybinding.shiftKey) {
-            sequence.modifiers!.push(Modifier.M2);
+            sequenceString = "shift+" + sequenceString;
+
+            // sequence.modifiers!.push(Modifier.M2);
         }
         if (keybinding.altKey) {
-            sequence.modifiers!.push(Modifier.M3);
+            sequenceString = "alt+" + sequenceString;
+
+            // sequence.modifiers!.push(Modifier.M3);
         }
         if (keybinding.metaKey) {
-            sequence.modifiers!.push(Modifier.M4);
+            sequenceString = "meta+" + sequenceString;
+
+            // sequence.modifiers!.push(Modifier.M4);
         }
-        return KeyCode.createKeyCode(sequence);
+        return sequenceString;
     }
 
     protected accelerator(keybinding: monaco.keybindings.SimpleKeybinding): Accelerator {

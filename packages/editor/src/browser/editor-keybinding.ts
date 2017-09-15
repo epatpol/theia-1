@@ -7,7 +7,7 @@
 
 import { injectable, inject } from "inversify";
 import { EditorManager } from "./editor-manager";
-import { KeyCode, Key, Modifier } from "@theia/core/lib/common/keys";
+// import { KeyCode, Key, Modifier } from "@theia/core/lib/common/keys";
 import { KeybindingContext, Keybinding, KeybindingContribution, KeybindingRegistry } from "@theia/core/lib/common/keybinding";
 
 @injectable()
@@ -35,12 +35,15 @@ export class EditorKeybindingContribution implements KeybindingContribution {
             {
                 commandId: 'editor.close',
                 context: this.editorKeybindingContext,
-                keyCode: KeyCode.createKeyCode({ first: Key.KEY_W, modifiers: [Modifier.M3] })
+                // keyCode: KeyCode.createKeyCode({ first: Key.KEY_W, modifiers: [Modifier.M3] })
+                keystroke: 'alt+w'
+
             },
             {
                 commandId: 'editor.close.all',
                 context: this.editorKeybindingContext,
-                keyCode: KeyCode.createKeyCode({ first: Key.KEY_W, modifiers: [Modifier.M2, Modifier.M3] })
+                // keyCode: KeyCode.createKeyCode({ first: Key.KEY_W, modifiers: [Modifier.M2, Modifier.M3] })
+                keystroke: 'shift+alt+w'
             }
         ].forEach(binding => {
             registry.registerKeyBinding(binding);

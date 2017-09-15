@@ -9,7 +9,7 @@ import * as electron from 'electron';
 import { inject, injectable } from 'inversify';
 import {
     Command, CommandContribution, CommandRegistry,
-    KeybindingContribution, KeybindingRegistry, KeyCode, Key, Modifier,
+    KeybindingContribution, KeybindingRegistry,
     MAIN_MENU_BAR, MenuModelRegistry, MenuContribution
 } from '../../common';
 import { FrontendApplication, FrontendApplicationContribution } from '../../browser';
@@ -66,7 +66,8 @@ export class ElectronMenuContribution implements FrontendApplicationContribution
     registerKeyBindings(registry: KeybindingRegistry): void {
         registry.registerKeyBinding({
             commandId: ElectronMenuCommands.TOGGLE_DEVELOPER_TOOLS.id,
-            keyCode: KeyCode.createKeyCode({ first: Key.KEY_I, modifiers: [Modifier.M1, Modifier.M2] })
+            // keystroke: KeyCode.createKeyCode({ first: Key.KEY_I, modifiers: [Modifier.M1, Modifier.M2] })
+            keystroke: 'ctrl+shift+i'
         });
     }
 

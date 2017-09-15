@@ -269,6 +269,8 @@ export namespace Key {
     Object.keys(Key).map(prop => Reflect.get(Key, prop)).filter(key => Key.isKey(key)).forEach(key => {
         CODE_TO_KEY[key.code] = key;
         KEY_CODE_TO_KEY[key.keyCode] = key;
+
     });
     MODIFIERS.push(...[Key.ALT_LEFT, Key.ALT_RIGHT, Key.CONTROL_LEFT, Key.CONTROL_RIGHT, Key.O_S_LEFT, Key.O_S_RIGHT, Key.SHIFT_LEFT, Key.SHIFT_RIGHT]);
 })();
+

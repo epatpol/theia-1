@@ -9,9 +9,9 @@ import { inject, injectable } from "inversify"
 import {
     CommandContribution,
     KeybindingContribution,
-    KeyCode,
-    Key,
-    Modifier,
+    /*     KeyCode,
+        Key,
+        Modifier, */
     KeybindingRegistry,
     Command,
     CommandRegistry,
@@ -56,7 +56,8 @@ export class TerminalFrontendContribution implements CommandContribution, MenuCo
         [
             {
                 commandId: TerminalCommands.NEW.id,
-                keyCode: KeyCode.createKeyCode({ first: Key.BACKQUOTE, modifiers: [Modifier.M1] })
+                // keyCode: KeyCode.createKeyCode({ first: Key.BACKQUOTE, modifiers: [Modifier.M1] })
+                keystroke: 'ctrl+`'
             },
         ].forEach(binding => {
             keybindings.registerKeyBinding(binding);

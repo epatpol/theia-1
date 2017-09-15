@@ -70,7 +70,7 @@ export class FrontendApplication {
         const host = this.getHost();
         Widget.attach(this.shell, host);
         window.addEventListener('resize', () => this.shell.update());
-        document.addEventListener('keydown', event => this.keybindings.run(event), true);
+        // document.addEventListener('keydown', event => this.keybindings.run(event), true);
     }
 
     protected getHost(): HTMLElement {
