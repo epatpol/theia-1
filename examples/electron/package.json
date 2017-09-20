@@ -8,6 +8,7 @@
   "dependencies": {
     "@theia/core": "^0.1.1",
     "@theia/cpp": "^0.1.1",
+    "@theia/custom-keybindings": "^0.1.1",
     "@theia/editor": "^0.1.1",
     "@theia/extension-manager": "^0.1.1",
     "@theia/filesystem": "^0.1.1",
