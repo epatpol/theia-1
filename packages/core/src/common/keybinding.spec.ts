@@ -17,7 +17,6 @@ chai.should();
 chai.config.showDiff = true;
 chai.config.includeStack = true;
 
-
 let keybindingRegistry: KeybindingRegistry;
 
 after(() => {
@@ -193,4 +192,3 @@ function createLogger(): ILogger {
         }
     });
 }
-

@@ -45,10 +45,7 @@ export class CustomKeybindingService implements Disposable, FrontendApplicationC
     protected readonly toDispose = new DisposableCollection();
     protected readonly ajv = new Ajv();
     protected ready = false;
-
-
     protected resolveReady: () => void;
-
 
     constructor(
         @inject(KeybindingServer) protected readonly server: KeybindingServer,

@@ -107,7 +107,6 @@ export class KeybindingRegistry {
     protected commands: { [commandId: string]: Keybinding[] } = {};
     protected defaultCommands: { [commandId: string]: Keybinding[] } = {};
 
-
     constructor(
         @inject(CommandRegistry) protected readonly commandRegistry: CommandRegistry,
         @inject(KeybindingContextRegistry) protected readonly contextRegistry: KeybindingContextRegistry,
@@ -158,7 +157,6 @@ export class KeybindingRegistry {
 
         bindings = bindings.filter(binding => binding !== bindingToRemove);
         this.keybindings[keyCode.keystroke] = bindings;
-
 
         let commands = this.commands[commandId] || [];
         commands = commands.filter(command => command !== bindingToRemove);

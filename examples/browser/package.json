@@ -5,6 +5,7 @@
   "dependencies": {
     "@theia/core": "0.2.0",
     "@theia/cpp": "0.2.0",
+    "@theia/custom-keybindings": "^0.2.0",
     "@theia/editor": "0.2.0",
     "@theia/extension-manager": "0.2.0",
     "@theia/filesystem": "0.2.0",
