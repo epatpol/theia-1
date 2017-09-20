@@ -1,10 +1,10 @@
 {
-  "name": "@theia/preferences",
+  "name": "@theia/custom-keybindings",
   "version": "0.1.1",
-  "description": "Theia - Preferences Extension",
+  "description": "Theia - Custom Keybindings Extension",
   "dependencies": {
     "@theia/core": "^0.1.1",
-    "@theia/preferences-api": "^0.1.1",
+    "@theia/custom-keybindings-api": "^0.1.1",
     "@theia/filesystem": "^0.1.1",
     "@theia/workspace": "^0.1.1",
     "jsonc-parser": "^1.0.0",
@@ -19,8 +19,8 @@
   },
   "theiaExtensions": [
     {
-      "frontend": "lib/browser/preference-frontend-module",
-      "backend": "lib/node/preference-backend-module"
+      "frontend": "lib/browser/keybinding-frontend-module",
+      "backend": "lib/node/keybinding-backend-module"
     }
   ]
 }
