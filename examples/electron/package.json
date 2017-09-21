@@ -14,6 +14,7 @@
     "@theia/git": "0.2.0",
     "@theia/go": "0.2.0",
     "@theia/java": "0.2.0",
+    "@theia/keymaps": "^0.2.0",
     "@theia/languages": "0.2.0",
     "@theia/markers": "0.2.0",
     "@theia/monaco": "0.2.0",
@@ -23,8 +24,7 @@
     "@theia/python": "0.2.0",
     "@theia/terminal": "0.2.0",
     "@theia/typescript": "0.2.0",
-    "@theia/workspace": "0.2.0",
-    "@theia/custom-keybindings": "^0.2.0"
+    "@theia/workspace": "0.2.0"
   },
   "scripts": {
     "prepare": "yarn run clean && yarn build",
