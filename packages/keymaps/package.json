@@ -1,15 +1,27 @@
 {
-  "name": "@theia/custom-keybindings-api",
+  "name": "@theia/keymaps",
   "version": "0.1.1",
-  "description": "Theia - Custom Keybindings API",
-  "main": "lib/common/index.js",
-  "typings": "lib/common/index.d.ts",
+  "description": "Theia - Keymaps Extension",
   "dependencies": {
-    "@theia/core": "^0.1.1"
+    "@theia/core": "^0.1.1",
+    "@theia/filesystem": "^0.1.1",
+    "@theia/workspace": "^0.1.1",
+    "jsonc-parser": "^1.0.0",
+    "ajv": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/temp": "^0.8.29",
+    "temp": "^0.8.3"
   },
   "publishConfig": {
     "access": "public"
   },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/keymaps-frontend-module",
+      "backend": "lib/node/keymaps-backend-module"
+    }
+  ],
   "keywords": [
     "theia-extension"
   ],
@@ -33,9 +45,6 @@
     "watch": "theiaext watch",
     "test": "theiaext test",
     "docs": "theiaext docs"
-  },
-  "devDependencies": {
-    "@theia/ext-scripts": "^0.1.1"
   },
   "nyc": {
     "extends": "../nyc.json"

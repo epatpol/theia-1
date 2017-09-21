@@ -18,10 +18,6 @@
     {
       "frontend": "lib/browser/preference-frontend-module",
       "backend": "lib/node/preference-backend-module"
-    },
-    {
-      "frontend": "lib/browser/keybinding-frontend-module",
-      "backend": "lib/node/keybinding-backend-module"
     }
   ],
   "keywords": [
