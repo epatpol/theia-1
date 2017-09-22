@@ -33,16 +33,6 @@ describe('keybindings', () => {
         expect(keybinding2).is.undefined;
     });
 
-    it("should unregister a keybinding", () => {
-        let binding = keybindingRegistry.getKeybindingsForCommand('test.command', { active: false });
-        expect(binding).is.not.undefined;
-        if (binding) {
-            keybindingRegistry.unregisterKeybindings(binding);
-            binding = keybindingRegistry.getKeybindingsForCommand('test.command', { active: false });
-            expect(binding).is.undefined;
-        }
-    });
-
     it("should set a keymap", () => {
         const rawKeybindings: RawKeybinding[] = [{
             command: "test.command",
@@ -176,7 +166,7 @@ function createKeybindingContributionProvider(): ContributionProvider<Keybinding
     return {
         getContributions(): KeybindingContribution[] {
             return [{
-                registerKeyBindings(keybindings: KeybindingRegistry): void {
+                registerDefaultKeyBindings(keybindings: KeybindingRegistry): void {
                     [
                         {
                             commandId: TEST_COMMAND.id,
@@ -212,7 +202,7 @@ function createKeybindingContributionProvider(): ContributionProvider<Keybinding
 
                         },
                     ].forEach(binding => {
-                        keybindings.registerKeyBinding(binding);
+                        keybindings.registerDefaultKeyBinding(binding);
                     });
                 }
             }];

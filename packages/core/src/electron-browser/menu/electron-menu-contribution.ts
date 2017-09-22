@@ -63,8 +63,8 @@ export class ElectronMenuContribution implements FrontendApplicationContribution
         });
     }
 
-    registerKeyBindings(registry: KeybindingRegistry): void {
-        registry.registerKeyBinding({
+    registerDefaultKeyBindings(registry: KeybindingRegistry): void {
+        registry.registerDefaultKeyBinding({
             commandId: ElectronMenuCommands.TOGGLE_DEVELOPER_TOOLS.id,
             keyCode: KeyCode.createKeyCode({ first: Key.KEY_I, modifiers: [Modifier.M1, Modifier.M2] })
         });
