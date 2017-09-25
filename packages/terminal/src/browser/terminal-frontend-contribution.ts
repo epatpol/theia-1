@@ -9,7 +9,7 @@ import { inject, injectable } from "inversify"
 import {
     CommandContribution,
     KeybindingContribution,
-    KeyCode,
+    TheiaKeyCodeUtils,
     Key,
     Modifier,
     KeybindingRegistry,
@@ -58,7 +58,7 @@ export class TerminalFrontendContribution implements CommandContribution, MenuCo
         [
             {
                 commandId: TerminalCommands.NEW.id,
-                keyCode: KeyCode.createKeyCode({ first: Key.BACKQUOTE, modifiers: [Modifier.M1] })
+                keyCode: TheiaKeyCodeUtils.createKeyCode({ first: Key.BACKQUOTE, modifiers: [Modifier.M1] })
             },
         ].forEach(binding => {
             keybindings.registerDefaultKeyBinding(binding);
