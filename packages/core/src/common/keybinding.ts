@@ -178,7 +178,6 @@ export class KeybindingContextRegistry {
     getContext(contextId: string): KeybindingContext | undefined {
         return this.contexts[contextId];
     }
-
 }
 
 @injectable()
@@ -186,7 +185,6 @@ export class KeybindingRegistry {
 
     protected defaultKeybindingIndex: KeybindingIndex = new KeybindingIndex();
     protected keymapsIndex: KeybindingIndex = new KeybindingIndex(this.defaultKeybindingIndex);
-
 
     constructor(
         @inject(CommandRegistry) protected readonly commandRegistry: CommandRegistry,

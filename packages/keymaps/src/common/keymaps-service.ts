@@ -41,7 +41,7 @@ export class KeymapsService implements Disposable, FrontendApplicationContributi
     protected readonly toDispose = new DisposableCollection();
     protected readonly ajv = new ajv();
     protected ready = false;
-    protected resolveReady: () => void;
+
 
     constructor(
         @inject(KeymapsServer) protected readonly server: KeymapsServer,
@@ -53,6 +53,7 @@ export class KeymapsService implements Disposable, FrontendApplicationContributi
             onDidChangeKeymap: event => this.onDidChangeKeymap(event)
         });
         this.toDispose.push(server);
+
     }
 
     dispose(): void {
