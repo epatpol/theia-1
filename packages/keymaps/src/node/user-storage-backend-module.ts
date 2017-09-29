@@ -7,35 +7,30 @@
 
 
 import { ConnectionHandler, JsonRpcConnectionHandler } from '@theia/core/lib/common';
-import { CustomKeymapsServer, KeybindingURI } from './keymaps-server';
-import { KeymapsServer, keybindingsPath, KeybindingClient/* , keymapsUri */ } from '../common/keymaps-protocol';
-import { KeymapsService } from '../common/keymaps-service';
+import { userStoragePath, IUserStorageServer, UserStorageClient } from '../common/user-storage-protocol';
 import { ContainerModule } from 'inversify';
+import { UserStorageServer, UserStorageRoot } from './user-storage-server';
 import { FileUri } from '@theia/core/lib/node';
-import URI from "@theia/core/lib/common/uri";
+import URI from '@theia/core/lib/common/uri';
 import * as os from 'os';
 
-/*
- * User preference server that watches the home directory of the user
- */
 
 export default new ContainerModule(bind => {
 
     const homeUri = FileUri.create(os.homedir());
-    const keymapsUri: URI = homeUri.withPath(homeUri.path.join('.theia', 'keymaps.json'));
+    const userStorageUri: URI = homeUri.withPath(homeUri.path.join('.theia'));
 
-    bind(KeybindingURI).toConstantValue(keymapsUri);
-    bind(CustomKeymapsServer).toSelf();
-    bind(KeymapsServer).to(CustomKeymapsServer);
+    bind(UserStorageRoot).toConstantValue(userStorageUri);
+    bind(UserStorageServer).toSelf().inSingletonScope();
+    bind(IUserStorageServer).to(UserStorageServer);
+
     bind(ConnectionHandler).toDynamicValue(ctx =>
-        new JsonRpcConnectionHandler<KeybindingClient>(keybindingsPath, client => {
-            const server = ctx.container.get<KeymapsServer>(KeymapsServer);
+        new JsonRpcConnectionHandler<UserStorageClient>(userStoragePath, client => {
+            const server = ctx.container.get<UserStorageServer>(UserStorageServer);
             server.setClient(client);
             client.onDidCloseConnection(() => server.dispose());
             return server;
         })
     ).inSingletonScope();
-
-    bind(KeymapsService).toSelf();
 
 });

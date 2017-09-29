@@ -19,7 +19,7 @@
   "theiaExtensions": [
     {
       "frontend": "lib/browser/keymaps-frontend-module",
-      "backend": "lib/node/keymaps-backend-module"
+      "backend": "lib/node/user-storage-backend-module"
     }
   ],
   "keywords": [
