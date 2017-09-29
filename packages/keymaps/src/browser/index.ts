@@ -6,3 +6,6 @@
  */
 
 export * from './keymaps-frontend-module';
+export * from './keymaps-service';
+export * from './user-storage-resource';
+export * from './keymaps-frontend-contribution';

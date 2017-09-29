@@ -5,5 +5,5 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-export * from './keymaps-backend-module';
-export * from './keymaps-server';
+export * from './user-storage-backend-module';
+export * from './user-storage-server';

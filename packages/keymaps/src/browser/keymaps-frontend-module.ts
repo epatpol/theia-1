@@ -7,10 +7,12 @@
 
 import { ContainerModule, } from 'inversify';
 import { WebSocketConnectionProvider, FrontendApplicationContribution } from '@theia/core/lib/browser';
-import { KeymapsServer, keybindingsPath } from "../common/keymaps-protocol";
-import { KeymapsService } from "../common/keymaps-service";
-import { KeymapsFrontendContribution } from "./keymaps-frontend-contribution";
-import { CommandContribution, MenuContribution } from '@theia/core/lib/common';
+import { IUserStorageServer, userStoragePath } from '../common/user-storage-protocol';
+import { KeymapsService } from './keymaps-service';
+import { KeymapsFrontendContribution } from './keymaps-frontend-contribution';
+import { CommandContribution, MenuContribution, ResourceResolver } from '@theia/core/lib/common';
+import { UserStorageResolver } from './user-storage-resource';
+import { UserStorageService } from './user-storage-service';
 
 export default new ContainerModule(bind => {
 
@@ -23,7 +25,13 @@ export default new ContainerModule(bind => {
 
     bind(FrontendApplicationContribution).to(KeymapsService).inSingletonScope();
 
-    bind(KeymapsServer).toDynamicValue(ctx =>
-        ctx.container.get(WebSocketConnectionProvider).createProxy(keybindingsPath)
+    bind(IUserStorageServer).toDynamicValue(ctx =>
+        ctx.container.get(WebSocketConnectionProvider).createProxy(userStoragePath)
     ).inSingletonScope();
+
+    bind(UserStorageResolver).toSelf().inSingletonScope();
+    bind(ResourceResolver).toDynamicValue(ctx => ctx.container.get(UserStorageResolver));
+
+    bind(UserStorageService).toSelf().inSingletonScope();
+
 });
