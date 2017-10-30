@@ -6,3 +6,5 @@
  */
 
 export * from './preference-backend-module';
+export * from './compound-preference-server';
+export * from './json-preference-server';

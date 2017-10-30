@@ -8,6 +8,7 @@
 import { inject, injectable } from 'inversify';
 import { Event, Emitter, Disposable, DisposableCollection } from '@theia/core/lib/common';
 import { PreferenceServer, PreferenceChangedEvent, PreferenceChange } from './preference-protocol';
+import { WorkspaceService } from '@theia/workspace/lib/browser/workspace-service';
 
 export {
     PreferenceChange
@@ -26,8 +27,16 @@ export class PreferenceService implements Disposable {
     });
 
     constructor(
-        @inject(PreferenceServer) protected readonly server: PreferenceServer
+        @inject(PreferenceServer) protected readonly server: PreferenceServer,
+        @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService
+
     ) {
+
+        workspaceService.root.then(root => {
+            if (root !== undefined) {
+                server.setRoot(root.uri);
+            }
+        });
         server.setClient({
             onDidChangePreference: event => this.onDidChangePreference(event)
         });

@@ -9,8 +9,21 @@ import { JsonRpcServer } from "@theia/core";
 
 export const preferencesPath = '/services/preferences';
 
+/*
+ * Workspace preference server that watches the current workspace
+ */
+export const WorkspacePreferenceServer = Symbol('WorkspacePreferenceServer');
+export type WorkspacePreferenceServer = PreferenceServer;
+
+/*
+ * User preference server that watches the home directory of the user
+ */
+export const UserPreferenceServer = Symbol('UserPreferenceServer');
+export type UserPreferenceServer = PreferenceServer;
+
 export const PreferenceServer = Symbol("PreferenceServer");
 export interface PreferenceServer extends JsonRpcServer<PreferenceClient> {
+    setRoot(root: string): Promise<void>
 }
 
 export interface PreferenceClient {

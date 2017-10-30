@@ -71,7 +71,7 @@ export function createPreferenceProxy<T extends Configuration>(preferences: Pref
             }
             throw new Error('unexpected property: ' + p);
         }
-    })
+    });
 }
 
 export function validatePreference(schema: PreferenceSchema, preference: Object) {
