@@ -26,6 +26,7 @@
     "@theia/terminal": "^0.2.0",
     "@theia/typescript": "^0.2.0",
     "@theia/workspace": "^0.2.0",
+    "@theia/userstorage": "0.2.0",
     "@theia/keymaps": "^0.2.0"
   },
   "scripts": {

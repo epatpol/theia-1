@@ -11,7 +11,8 @@ import { injectable, inject } from 'inversify';
 import { FileSystem, FileChange } from '@theia/filesystem/lib/common';
 import { FileSystemWatcher } from "@theia/filesystem/lib/common";
 
-import * as jsoncparser from 'jsonc-parser';
+// import * as jsoncparser from 'jsonc-parser';
+import { stripComments } from 'jsonc-parser';
 import URI from '@theia/core/lib/common/uri';
 import { UserStorageUri } from './user-storage-uri';
 
@@ -20,7 +21,7 @@ export class UserStorageServiceFilesystemImpl implements UserStorageService {
 
     protected readonly toDispose = new DisposableCollection();
     protected readonly onUserStorageChangedEmitter = new Emitter<UserStorageChangeEvent>();
-    protected userStorageFolder: URI;
+    protected userStorageFolder: Promise<URI>;
 
     constructor(
         @inject(FileSystem) protected readonly fileSystem: FileSystem,
@@ -28,14 +29,14 @@ export class UserStorageServiceFilesystemImpl implements UserStorageService {
         @inject(ILogger) protected readonly logger: ILogger
 
     ) {
-        this.fileSystem.getCurrentUserHome().then(home => {
-            const homeUri = new URI(home.uri);
-            this.userStorageFolder = homeUri.resolve(THEIA_USER_STORAGE_FOLDER);
+        this.userStorageFolder = this.fileSystem.getCurrentUserHome().then(home => {
 
-            watcher.watchFileChanges(this.userStorageFolder).then(disposable =>
+            const userStorageFolderUri = new URI(home.uri).resolve(THEIA_USER_STORAGE_FOLDER);
+            watcher.watchFileChanges(userStorageFolderUri).then(disposable =>
                 this.toDispose.push(disposable)
             );
             this.toDispose.push(this.watcher.onFilesChanged(changes => this.onDidFilesChanged(changes)));
+            return new URI(home.uri).resolve(THEIA_USER_STORAGE_FOLDER);
         });
     }
 
@@ -52,19 +53,23 @@ export class UserStorageServiceFilesystemImpl implements UserStorageService {
     }
 
     readContents(uri: string) {
-        const fsUri = UserStorageUri.toFsUri(this.userStorageFolder, new URI(uri));
-
-        return this.fileSystem.resolveContent(fsUri.toString()).then(({ stat, content }) => jsoncparser.stripComments(content));
-
+        return this.userStorageFolder
+            .then(folderUri => {
+                const userStorageUri = new URI(uri);
+                return this.fileSystem.resolveContent(UserStorageUri.toFsUri(folderUri, userStorageUri).toString());
+            })
+            .then(({ stat, content }) => stripComments(content));
     }
 
     saveContents(uri: string, content: string) {
-        const fsUri = UserStorageUri.toFsUri(this.userStorageFolder, new URI(uri));
 
-        return this.fileSystem.getFileStat(fsUri.toString()).then(fileStat => {
-            this.fileSystem.setContent(fileStat, content);
+        return this.userStorageFolder.then(folderUri => {
+            const fsUri = UserStorageUri.toFsUri(folderUri, new URI(uri));
+
+            this.fileSystem.getFileStat(fsUri.toString()).then(fileStat => {
+                this.fileSystem.setContent(fileStat, content).then(() => Promise.resolve());
+            });
         });
-
     }
 
     get onUserStorageChanged(): Event<UserStorageChangeEvent> {

@@ -88,16 +88,22 @@ module.exports = {
                 loader: 'ignore-loader'
             },
             {
+                // node-jsonc-parser in the frontend
+                test: /jsonc-parser/,
+                loader: 'ignore-loader'
+            },
+            {
                 test: /\\.js$/,
                 enforce: 'pre',
-                loader: 'source-map-loader'
+                loader: 'source-map-loader',
+                exclude: /jsonc-parser/
             },
             {
                 test: /\\.woff(2)?(\\?v=[0-9]\\.[0-9]\\.[0-9])?$/,
                 loader: "url-loader?limit=10000&mimetype=application/font-woff"
             }
         ],
-        noParse: /vscode-languageserver-types|vscode-uri/
+        noParse: /vscode-languageserver-types|vscode-uri|jsonc-parser/
     },
     resolve: {
         extensions: ['.js']${this.ifMonaco(() => `,

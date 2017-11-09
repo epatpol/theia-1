@@ -8,7 +8,7 @@
 import { JSONExt } from '@phosphor/coreutils';
 import { inject, injectable } from 'inversify';
 import URI from "@theia/core/lib/common/uri";
-import { Disposable, DisposableCollection, ILogger, MaybePromise } from '@theia/core/lib/common';
+import { /* Disposable, */ DisposableCollection, ILogger, MaybePromise } from '@theia/core/lib/common';
 import { FileSystem } from '@theia/filesystem/lib/common';
 import { FileSystemWatcherServer, DidFilesChangedParams, FileChange } from '@theia/filesystem/lib/common/filesystem-watcher-protocol';
 import { PreferenceChangedEvent, PreferenceClient, PreferenceServer, PreferenceChange } from '../common';
@@ -37,16 +37,16 @@ export class JsonPreferenceServer implements PreferenceServer {
         this.preferenceUri = Promise.resolve(preferenceUri).then(uri => uri.toString());
 
         this.toDispose.push(watcherServer);
-        watcherServer.setClient({
-            onDidFilesChanged: p => this.onDidFilesChanged(p)
-        });
-        this.preferenceUri.then(uri =>
-            watcherServer.watchFileChanges(uri).then(id => {
-                this.toDispose.push(Disposable.create(() =>
-                    watcherServer.unwatchFileChanges(id))
-                );
-            })
-        );
+        // watcherServer.setClient({
+        //     onDidFilesChanged: p => this.onDidFilesChanged(p)
+        // });
+        // this.preferenceUri.then(uri =>
+        //     watcherServer.watchFileChanges(uri).then(id => {
+        //         this.toDispose.push(Disposable.create(() =>
+        //             watcherServer.unwatchFileChanges(id))
+        //         );
+        //     })
+        // );
         this.ready = this.reconcilePreferences();
     }
 
