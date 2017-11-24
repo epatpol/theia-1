@@ -5,4 +5,6 @@
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  */
 
-export * from './preference-frontend-module';
+export * from '@theia/preferences-api/lib/browser';
+export * from './preference-provider-user';
+export * from './preference-provider-workspace';

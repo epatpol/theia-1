@@ -13,9 +13,9 @@ import { UserStorageResource } from './user-storage-resource';
 import { Emitter, } from '@theia/core/lib/common';
 import { ILogger } from '@theia/core/lib/common/logger';
 import { MockLogger } from '@theia/core/lib/common/test/mock-logger';
-import { FileSystemWatcher, FileSystem, FileSystemPreferences, FileStat, FileChange, FileChangeType, createFileSystemPreferences } from '@theia/filesystem/lib/common/';
-import { PreferenceService, PreferenceServer } from '@theia/preferences-api/lib/common';
-import { MockPreferenceServer } from '@theia/preferences-api/lib/common/test';
+import { FileSystemWatcher, FileSystem, FileStat, FileChange, FileChangeType } from '@theia/filesystem/lib/common/';
+import { PreferenceService } from '@theia/preferences-api/lib/browser';
+import { MockPreferenceService } from '@theia/preferences-api/lib/browser/test/mock-preference-service';
 import { FileSystemWatcherServer } from '@theia/filesystem/lib/common/filesystem-watcher-protocol';
 import { MockFilesystem, MockFilesystemWatcherServer } from '@theia/filesystem/lib/common/test';
 import { UserStorageUri } from './user-storage-uri';
@@ -38,15 +38,12 @@ before(async () => {
     testContainer = new Container();
 
     /* Preference bindings*/
-    testContainer.bind(PreferenceService).toSelf().inSingletonScope();
-    testContainer.bind(PreferenceServer).to(MockPreferenceServer).inSingletonScope();
-
+    testContainer.bind(PreferenceService).to(MockPreferenceService).inSingletonScope();
     /* FS mocks and bindings */
     testContainer.bind(FileSystemWatcherServer).to(MockFilesystemWatcherServer).inSingletonScope();
     testContainer.bind(FileSystemWatcher).toDynamicValue(ctx => {
         const server = ctx.container.get<FileSystemWatcherServer>(FileSystemWatcherServer);
-        const prefs = ctx.container.get<FileSystemPreferences>(FileSystemPreferences);
-        const watcher = new FileSystemWatcher(server, prefs);
+        const watcher = new FileSystemWatcher(server);
 
         sinon.stub(watcher, 'onFilesChanged').get(() =>
             mockOnFileChangedEmitter.event
@@ -55,10 +52,6 @@ before(async () => {
         return watcher;
 
     }).inSingletonScope();
-    testContainer.bind(FileSystemPreferences).toDynamicValue(ctx => {
-        const preferences = ctx.container.get(PreferenceService);
-        return createFileSystemPreferences(preferences);
-    });
 
     /* Mock logger binding*/
     testContainer.bind(ILogger).to(MockLogger);

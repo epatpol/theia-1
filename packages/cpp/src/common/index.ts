@@ -7,4 +7,3 @@
 
 export const CPP_LANGUAGE_ID = 'cpp';
 export const CPP_LANGUAGE_NAME = 'C/C++';
-export * from './cpp-preferences';

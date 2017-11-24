@@ -13,9 +13,8 @@ import * as assert from 'assert';
 import * as chaiAsPromised from 'chai-as-promised';
 import URI from "@theia/core/lib/common/uri";
 import { FileUri } from "@theia/core/lib/node";
-import { PreferenceService, PreferenceServer, PreferenceClient } from "@theia/preferences-api";
 import { FileSystem } from "../common/filesystem";
-import { FileSystemWatcher, createFileSystemPreferences } from '../common';
+import { FileSystemWatcher } from '../common';
 import { FileSystemNode } from "./node-filesystem";
 import { NsfwFileSystemWatcherServer } from './nsfw-watcher/nsfw-filesystem-watcher';
 
@@ -770,12 +769,10 @@ describe("NodeFileSystem", function () {
     }
 
     function createFileSystemWatcher(): FileSystemWatcher {
-        const preferences = new PreferenceService(new PreferenceServerStub());
-        const fileSystemPreferences = createFileSystemPreferences(preferences);
         const server = new NsfwFileSystemWatcherServer({
             verbose: true
         });
-        return new FileSystemWatcher(server, fileSystemPreferences);
+        return new FileSystemWatcher(server);
     }
 
     function sleep(time: number) {
@@ -787,9 +784,3 @@ describe("NodeFileSystem", function () {
 process.on("unhandledRejection", (reason: any) => {
     console.error("Unhandled promise rejection: " + reason);
 });
-
-class PreferenceServerStub implements PreferenceServer {
-    constructor() { }
-    setClient(client: PreferenceClient | undefined): void { }
-    dispose(): void { }
-}
