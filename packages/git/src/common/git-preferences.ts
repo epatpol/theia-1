@@ -6,8 +6,8 @@
  */
 
 import { interfaces } from 'inversify';
-import { createPreferenceProxy, PreferenceProxy, PreferenceService } from '@theia/preferences-api';
-import { PreferenceSchema } from '@theia/preferences-api/lib/common/';
+import { createPreferenceProxy, PreferenceProxy, PreferenceService } from '@theia/preferences-api/lib/browser';
+import { PreferenceSchema } from '@theia/preferences-api/lib/browser/';
 
 export interface GitConfiguration {
 

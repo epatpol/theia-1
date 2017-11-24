@@ -12,7 +12,7 @@ import {
     PreferenceService,
     PreferenceContribution,
     PreferenceSchema
-} from '@theia/preferences/lib/common';
+} from '@theia/preferences/lib/browser';
 
 export const CppConfigSchema: PreferenceSchema = {
     "type": "object",
@@ -51,7 +51,7 @@ export function createCppPreferences(preferences: PreferenceService): CppPrefere
 
 export function bindCppPreferences(bind: interfaces.Bind): void {
     bind(CppPreferences).toDynamicValue(ctx => {
-        const preferences = ctx.container.get(PreferenceService);
+        const preferences = ctx.container.get<PreferenceService>(PreferenceService);
         return createCppPreferences(preferences);
     });
 
