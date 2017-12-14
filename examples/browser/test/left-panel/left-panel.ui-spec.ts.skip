@@ -1,0 +1,33 @@
+// import { LeftPanel } from "./left-panel";
+
+// describe('theia left panel elements loading', () => {
+
+//     let leftPanelMain: LeftPanel;
+
+//     before(() => {
+
+//         leftPanelMain = new LeftPanel();
+//     });
+
+        // Move to left-panel.spec.ts
+    // it.only('no sub menu in left tab is active on load', () => {
+    //     expect(theiaLayoutMain.leftMenuTabShows(2)).to.be.false;
+    //     expect(theiaLayoutMain.leftMenuTabShows(3)).to.be.false;
+    // });
+
+    // Move to left-panel.spec.ts
+    // it('Files opens a workspace', () => {
+    //     expect(theiaLayoutMain.workspaceExists()).to.be.true;
+    // });
+
+    // Move to left-panel.spec.ts
+    // it('Git container opens', () => {
+    //     expect(theiaLayoutMain.gitContainer()).to.be.true;
+    // });
+
+    // Move to left-panel.spec.ts
+    // it('Extensions container opens', () => {
+    //     expect(theiaLayoutMain.extensionsContainer()).to.be.true;
+    // });
+
+// });
