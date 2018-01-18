@@ -38,7 +38,7 @@ export class PreferenceProviderUser implements PreferenceProvider {
 
     async init(): Promise<void> {
         this.preferenceResource = this.provider(new URI('user_storage:settings.json'));
-        this.preferenceResource.then(resource => {
+        return this.preferenceResource.then(resource => {
             this.resolveReady();
 
             if (resource.onDidChangeContents) {

@@ -6,11 +6,14 @@
  */
 
 import { ContainerModule, } from 'inversify';
+import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { PreferenceService, PreferenceServiceImpl } from "@theia/preferences-api/lib/browser/";
 import { PreferenceProviderUser } from './preference-provider-user';
 import { PreferenceProviderWorkspace } from './preference-provider-workspace';
 
 export default new ContainerModule(bind => {
+
+    bind(FrontendApplicationContribution).toDynamicValue(ctx => ctx.container.get(PreferenceService));
 
     bind(PreferenceProviderUser).toSelf().inSingletonScope();
     bind(PreferenceProviderWorkspace).toSelf().inSingletonScope();
