@@ -9,6 +9,12 @@ import { MessageConnection, ResponseError } from "vscode-jsonrpc";
 import { Event, Emitter } from "../event";
 import { Disposable } from "../disposable";
 import { ConnectionHandler } from './handler';
+let isNode = false;
+let ProxyWorker: any;
+if (typeof window === 'undefined') {
+    isNode = true;
+    ProxyWorker = require('./worker');
+}
 
 export type JsonRpcServer<Client> = Disposable & {
     /**
@@ -159,7 +165,7 @@ export class JsonRpcProxyFactory<T extends object> implements ProxyHandler<T> {
 
     /**
      * Process an incoming JSON-RPC notification.
-     *
+     *Worker
      * Same as [[onRequest]], but called on incoming notifications rather than
      * methods calls.
      */
@@ -216,16 +222,35 @@ export class JsonRpcProxyFactory<T extends object> implements ProxyHandler<T> {
         const isNotify = this.isNotification(p);
         return (...args: any[]) =>
             this.connectionPromise.then(connection =>
-                new Promise((resolve, reject) => {
+                new Promise(async (resolve, reject) => {
                     try {
                         if (isNotify) {
                             connection.sendNotification(p.toString(), ...args);
                             resolve();
                         } else {
-                            const resultPromise = connection.sendRequest(p.toString(), ...args) as Promise<any>;
-                            resultPromise
-                                .catch((err: any) => reject(err))
-                                .then((result: any) => resolve(result));
+                            if (isNode) {
+                                // node
+                                const resultPromise = connection.sendRequest(p.toString(), ...args) as Promise<any>;
+                                resultPromise
+                                    .catch((err: any) => reject(err))
+                                    .then((result: any) => resolve(result));
+                            } else {
+                                // browser
+                                const worker = new ProxyWorker();
+                                const info: WorkerInfo = {
+                                    connection: JSON.parse(JSON.stringify(connection)),
+                                    method: p.toString(),
+                                    args: args
+                                };
+                                worker.postMessage({ info });
+
+                                worker.onmessage = (e: any) => {
+                                    if (e instanceof Error) {
+                                        reject(e);
+                                    }
+                                    resolve(e);
+                                };
+                            }
                         }
                     } catch (err) {
                         reject(err);
@@ -246,4 +271,10 @@ export class JsonRpcProxyFactory<T extends object> implements ProxyHandler<T> {
     protected isNotification(p: PropertyKey): boolean {
         return p.toString().startsWith("notify") || p.toString().startsWith("on");
     }
+}
+
+export interface WorkerInfo {
+    connection: MessageConnection
+    method: string,
+    args: any[]
 }

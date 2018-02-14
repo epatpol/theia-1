@@ -95,7 +95,11 @@ module.exports = {
             {
                 test: /node_modules[\\\\|\/](vscode-languageserver-types|vscode-uri|jsonc-parser)/,
                 use: { loader: 'umd-compat-loader' }
-            }
+            },
+            {
+                test: /\.worker\.js$/,
+                use: { loader: 'worker-loader', options: { inline: true } },
+              }
         ]
     },
     resolve: {
