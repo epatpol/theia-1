@@ -6,12 +6,14 @@
  */
 
 import { ContainerModule, interfaces } from "inversify";
-import { bindContributionProvider, MessageService, MessageClient } from '../common';
+import { bindContributionProvider, MessageService, MessageClient, ConnectionHandler, JsonRpcConnectionHandler } from '../common';
 import { BackendApplication, BackendApplicationContribution, BackendApplicationCliContribution } from './backend-application';
 import { CliManager, CliContribution } from './cli';
 import { ServerProcess, RemoteMasterProcessFactory, clusterRemoteMasterProcessFactory } from './cluster';
 import { IPCConnectionProvider } from "./messaging";
 import { BackendConnectionStatusEndpoint } from './backend-connection-status';
+import { ApplicationServer } from "@theia/core/lib/node/application-server";
+import { IApplicationServer, applicationPath } from "@theia/core/lib/common/application-protocol";
 
 export function bindServerProcess(bind: interfaces.Bind, masterFactory: RemoteMasterProcessFactory): void {
     bind(RemoteMasterProcessFactory).toConstantValue(masterFactory);
@@ -38,4 +40,16 @@ export const backendApplicationModule = new ContainerModule(bind => {
 
     bind(BackendConnectionStatusEndpoint).toSelf().inSingletonScope();
     bind(BackendApplicationContribution).toDynamicValue(ctx => ctx.container.get(BackendConnectionStatusEndpoint)).inSingletonScope();
+
+    bind(ApplicationServer).toSelf().inSingletonScope();
+
+    bind(IApplicationServer).toDynamicValue(ctx =>
+        ctx.container.get(ApplicationServer)
+    ).inSingletonScope();
+
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new JsonRpcConnectionHandler(applicationPath, () =>
+            ctx.container.get(IApplicationServer)
+        )
+    ).inSingletonScope();
 });

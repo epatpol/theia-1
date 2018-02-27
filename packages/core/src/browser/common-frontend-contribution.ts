@@ -343,6 +343,8 @@ export class CommonFrontendContribution implements MenuContribution, CommandCont
                 /* FIXME implement QUIT of innermost command.  */
             }
         });
+
+
     }
 
     registerKeybindings(registry: KeybindingRegistry): void {
