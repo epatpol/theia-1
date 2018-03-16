@@ -9,13 +9,16 @@ import { injectable, inject } from "inversify";
 import { Resource, ResourceResolver, Emitter, Event, DisposableCollection } from "@theia/core";
 import URI from "@theia/core/lib/common/uri";
 import { FileSystem, FileStat } from "../common/filesystem";
-import { FileSystemWatcher } from "./filesystem-watcher";
+import { FileSystemWatcher, FileChangeType } from "./filesystem-watcher";
 
 export class FileResource implements Resource {
 
     protected readonly toDispose = new DisposableCollection();
     protected readonly onDidChangeContentsEmitter = new Emitter<void>();
+    protected readonly onDidRenameEmitter = new Emitter<string>();
+
     readonly onDidChangeContents: Event<void> = this.onDidChangeContentsEmitter.event;
+    readonly onDidRename: Event<string> = this.onDidRenameEmitter.event;
 
     protected state: FileResource.State = FileResource.emptyState;
     protected uriString: string;
@@ -28,7 +31,13 @@ export class FileResource implements Resource {
         this.uriString = this.uri.toString();
         this.toDispose.push(this.onDidChangeContentsEmitter);
         this.toDispose.push(this.fileSystemWatcher.onFilesChanged(changes => {
-            if (changes.some(e => e.uri.toString() === uri.toString())) {
+            if (changes.some(e => {
+                if (e.type === FileChangeType.RENAMED) {
+                    this.onDidRenameEmitter.fire(e.newUri!.toString());
+                }
+                return e.uri.toString() === uri.toString();
+            }
+            )) {
                 this.onDidChangeContentsEmitter.fire(undefined);
             }
         }));

@@ -65,6 +65,12 @@ export class MonacoEditorModel implements ITextEditorModel, TextEditorDocument {
             if (this.resource.onDidChangeContents) {
                 this.toDispose.push(this.resource.onDidChangeContents(() => this.sync()));
             }
+
+            if (this.resource.onDidRename) {
+                this.toDispose.push(this.resource.onDidRename(name => {
+                    // this.textEditorModel.set
+                }));
+            }
         }
     }
 
