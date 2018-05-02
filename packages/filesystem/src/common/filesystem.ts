@@ -129,6 +129,13 @@ export interface FileStat {
     uri: string;
 
     /**
+     * File access
+     */
+    isReadable: boolean;
+    isWriteable: boolean;
+    isExecutable: boolean;
+
+    /**
      * The last modification of this file.
      */
     lastModification: number;
@@ -149,7 +156,6 @@ export interface FileStat {
      * The size of the file if known.
      */
     size?: number;
-
 }
 
 export namespace FileStat {

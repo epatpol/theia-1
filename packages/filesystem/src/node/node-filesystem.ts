@@ -205,6 +205,10 @@ Actual: ${JSON.stringify(file)}.`);
         ]);
         if (!sourceStat) {
             throw new Error(`File does not exist under ${sourceUri}.`);
+        } else {
+            if (!sourceStat.isReadable) {
+                throw new Error(`No read permission for ${sourceUri}.`);
+            }
         }
         if (targetStat && !overwrite) {
             throw new Error(`File already exist under the '${targetUri}' target location. Did you set the 'overwrite' flag to true?`);
@@ -336,6 +340,9 @@ Actual: ${JSON.stringify(file)}.`);
     protected async doCreateFileStat(uri: URI, stat: fs.Stats): Promise<FileStat> {
         return {
             uri: uri.toString(),
+            isReadable: Boolean(stat.mode & fs.constants.R_OK),
+            isWriteable: Boolean(stat.mode & fs.constants.W_OK),
+            isExecutable: Boolean(stat.mode & fs.constants.X_OK),
             lastModification: stat.mtime.getTime(),
             isDirectory: false,
             size: stat.size
@@ -346,6 +353,9 @@ Actual: ${JSON.stringify(file)}.`);
         const children = depth > 0 ? await this.doGetChildren(uri, depth) : [];
         return {
             uri: uri.toString(),
+            isReadable: Boolean(stat.mode & fs.constants.R_OK),
+            isWriteable: Boolean(stat.mode & fs.constants.W_OK),
+            isExecutable: Boolean(stat.mode & fs.constants.X_OK),
             lastModification: stat.mtime.getTime(),
             isDirectory: true,
             children

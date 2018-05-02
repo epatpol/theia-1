@@ -8,8 +8,11 @@
 import { injectable } from 'inversify';
 import { FileSystem, FileStat, FileSystemClient } from '../filesystem';
 
-const mockFileStat = {
+const mockFileStat: FileStat = {
     uri: '',
+    isReadable: true,
+    isWriteable: true,
+    isExecutable: true,
     lastModification: 0,
     isDirectory: true,
 };

@@ -68,9 +68,27 @@ describe("NodeFileSystem", function () {
             const stat = await fileSystem.getFileStat(root.toString());
             expect(stat).to.not.be.undefined;
             expect(stat!.children!.length).to.equal(2);
-
         });
 
+        it("Should return a filestat with access flags set if the user launching he process doesn't have permissions", async () => {
+            const uri_1 = root.resolve("foo.txt");
+            const uri = FileUri.fsPath(uri_1);
+            fs.writeFileSync(uri, "foo.txt");
+            // Doing it with chmod instead of passing mode to writeFile because of https://github.com/nodejs/node-v0.x-archive/issues/25756
+            fs.chmodSync(uri, 0o666);
+            expect(fs.statSync(uri).isFile()).to.be.true;
+
+            let stat = await fileSystem.getFileStat(uri_1.toString());
+            expect(stat!.isReadable).to.be.true;
+            expect(stat!.isWriteable).to.be.true;
+            expect(stat!.isExecutable).to.be.false;
+
+            fs.chmodSync(FileUri.fsPath(uri_1), 0o000);
+            stat = await fileSystem.getFileStat(root.toString());
+            expect(stat!.isReadable).to.be.false;
+            expect(stat!.isWriteable).to.be.false;
+            expect(stat!.isExecutable).to.be.false;
+        });
     });
 
     describe("02 #resolveContent", () => {
@@ -141,6 +159,15 @@ describe("NodeFileSystem", function () {
                 .that.not.have.property("children");
         });
 
+        it("Should be rejected with an error if the file does not have read access.", async () => {
+            const uri_1 = root.resolve("foo.txt");
+            const uri = FileUri.fsPath(uri_1);
+            fs.writeFileSync(uri, "foo.txt");
+            fs.chmodSync(uri, 0o000);
+
+            await expectThrowsAsync(fileSystem.resolveContent(uri.toString()), Error);
+        });
+
     });
 
     describe("03 #setContent", () => {
@@ -151,6 +178,9 @@ describe("NodeFileSystem", function () {
 
             const stat = {
                 uri: uri.toString(),
+                isReadable: true,
+                isWriteable: true,
+                isExecutable: false,
                 lastModification: new Date().getTime(),
                 isDirectory: false
             };
@@ -203,6 +233,8 @@ describe("NodeFileSystem", function () {
         it("Should return with a stat representing the latest state of the successfully modified file.", async () => {
             const uri = root.resolve("foo.txt");
             fs.writeFileSync(FileUri.fsPath(uri), "foo", { encoding: "utf8" });
+            fs.chmodSync(FileUri.fsPath(uri), 0o666);
+
             expect(fs.existsSync(FileUri.fsPath(uri))).to.be.true;
             expect(fs.statSync(FileUri.fsPath(uri)).isFile()).to.be.true;
             expect(fs.readFileSync(FileUri.fsPath(uri), { encoding: "utf8" })).to.be.equal("foo");
@@ -214,6 +246,17 @@ describe("NodeFileSystem", function () {
             expect(fs.readFileSync(FileUri.fsPath(uri), { encoding: "utf8" }))
                 .to.be.equal("baz");
 
+        });
+
+        it.only("Should be rejected with an error if the file has no write access.", async () => {
+            const uri_1 = root.resolve("foo.txt");
+            const uri = FileUri.fsPath(uri_1);
+            fs.writeFileSync(uri, "foo.txt");
+            fs.chmodSync(uri, 0o000);
+
+            const currentStat = await fileSystem.getFileStat(uri.toString());
+            // fileSystem.setContent(currentStat!, "baz")
+            await expectThrowsAsync(fileSystem.setContent(currentStat!, "baz"), Error);
         });
 
     });

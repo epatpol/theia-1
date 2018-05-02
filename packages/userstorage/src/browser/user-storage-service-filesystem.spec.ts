@@ -79,7 +79,16 @@ before(async () => {
         sinon.stub(fs, 'resolveContent').callsFake((uri): Promise<{ stat: FileStat, content: string }> => {
             const content = files[uri];
             return Promise.resolve(
-                { stat: { uri: uri, lastModification: 0, isDirectory: false }, content: content }
+                {
+                    stat: {
+                        uri: uri,
+                        isReadable: true,
+                        isWriteable: true,
+                        isExecutable: false,
+                        lastModification: 0,
+                        isDirectory: false
+                    }, content: content
+                }
             );
         });
 
